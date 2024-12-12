@@ -36,9 +36,14 @@ builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
 
 // ----------------------[ Add Dependencies for Repository Here ] -------------- //
 builder.Services.AddScoped(typeof(IRepository<>),typeof(Repository<>));
+builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ITagRepository,TagRepository>();
 
 // ----------------------[ Add Dependencies for Services Here ] -------------- //
 builder.Services.AddScoped<IAuthServices,AuthServices>();
+builder.Services.AddScoped<IBlogService, BlogService>();
+
 
 
 

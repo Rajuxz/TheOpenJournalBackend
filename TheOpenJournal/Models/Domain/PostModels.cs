@@ -25,9 +25,9 @@ namespace TheOpenJournal.Models.Domain
         [ForeignKey(nameof(Category))]
         public Guid CategoryId { get; set; }
         public virtual Category Category { get; set; }
-        public int? LikeCount { get; set; }
-        public int? CommentCount { get; set; }
-        public int? UniqueViewCount { get; set; }
+        public int LikeCount { get; set; } = 0;
+        public int CommentCount { get; set; } = 0;
+        public int UniqueViewCount { get; set; } = 0;
     }
     //Category model.
     public class Category

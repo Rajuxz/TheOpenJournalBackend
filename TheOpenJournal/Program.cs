@@ -1,9 +1,11 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TheOpenJournal.Data;
+using TheOpenJournal.Mapper;
 using TheOpenJournal.Models.Domain;
 using TheOpenJournal.Repository.Implementations;
 using TheOpenJournal.Repository.Interfaces;
@@ -33,6 +35,8 @@ builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
+//-----------------------[]-------------------------------------------------------//
+builder.Services.AddAutoMapper(typeof(CategoryMapper));
 
 // ----------------------[ Add Dependencies for Repository Here ] -------------- //
 builder.Services.AddScoped(typeof(IRepository<>),typeof(Repository<>));
@@ -43,6 +47,9 @@ builder.Services.AddScoped<ITagRepository,TagRepository>();
 // ----------------------[ Add Dependencies for Services Here ] -------------- //
 builder.Services.AddScoped<IAuthServices,AuthServices>();
 builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddScoped<ICategoryServices, CategoryService>();
+
+
 
 
 

@@ -13,6 +13,9 @@ namespace TheOpenJournal.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            // as [Index] annotation was introduced in .Net 7
+            // Use fluent api to enforce that Slug is unique.
+            modelBuilder.Entity<Post>().HasIndex(p=>p.Slug).IsUnique();
             modelBuilder.Entity<AdminModel>().HasData(
                 new AdminModel()
                 {

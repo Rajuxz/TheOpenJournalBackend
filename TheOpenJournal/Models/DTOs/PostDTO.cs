@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using TheOpenJournal.Models.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace TheOpenJournal.Models.DTOs
 {
@@ -16,7 +17,6 @@ namespace TheOpenJournal.Models.DTOs
         public string? FeaturedImageUrl { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
-        [Required]
         public ICollection<Tag> Tags { get; set; } = new List<Tag>();
         [Required] 
         [ForeignKey(nameof(Category))]

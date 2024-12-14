@@ -7,5 +7,6 @@ namespace TheOpenJournal.Models.Domain
         public string? ProfilePicture{get;set;}
         public string? Bio { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
     }
 }

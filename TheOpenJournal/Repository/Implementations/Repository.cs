@@ -44,6 +44,11 @@ namespace TheOpenJournal.Repository.Implementations
             return _database.AsQueryable();
         }
 
+        public async Task<int> AddRangeAsync(IEnumerable<T> entity)
+        {
+            await _database.AddRangeAsync(entity);
+            return await SaveAsync();
+        }
         public void Dispose()
         {
             //Disposing is called

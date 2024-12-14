@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TheOpenJournal.Data;
@@ -11,9 +12,10 @@ using TheOpenJournal.Data;
 namespace TheOpenJournal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241214135430_updateRelationshipWithCategory")]
+    partial class updateRelationshipWithCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -239,6 +241,21 @@ namespace TheOpenJournal.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PostTag", b =>
+                {
+                    b.Property<Guid>("PostsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("TagsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("PostsId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("PostTag");
+                });
+
             modelBuilder.Entity("TheOpenJournal.Models.Domain.AdminModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -278,7 +295,7 @@ namespace TheOpenJournal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8eecc5f1-f7e7-4e7c-a7e3-c9831a95c48a"),
+                            Id = new Guid("7b38c556-ed71-4cb4-834f-86d87d4cd829"),
                             Email = "admin@gmail.com",
                             FullName = "Admin",
                             IsActive = true,
@@ -288,7 +305,7 @@ namespace TheOpenJournal.Migrations
                         },
                         new
                         {
-                            Id = new Guid("a0bcb57c-9c77-415d-93eb-96fcc453739c"),
+                            Id = new Guid("9a19562d-615d-40a3-b034-9e098c90a58d"),
                             Email = "raju@gmail.com",
                             FullName = "Raju",
                             IsActive = true,
@@ -368,9 +385,6 @@ namespace TheOpenJournal.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("TagId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
@@ -381,18 +395,10 @@ namespace TheOpenJournal.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Slug")
                         .IsUnique();
-
-                    b.HasIndex("TagId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Posts");
                 });
@@ -496,6 +502,21 @@ namespace TheOpenJournal.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PostTag", b =>
+                {
+                    b.HasOne("TheOpenJournal.Models.Domain.Post", null)
+                        .WithMany()
+                        .HasForeignKey("PostsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TheOpenJournal.Models.Domain.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TheOpenJournal.Models.Domain.Comment", b =>
                 {
                     b.HasOne("TheOpenJournal.Models.Domain.Post", "Posts")
@@ -513,31 +534,6 @@ namespace TheOpenJournal.Migrations
                     b.Navigation("Posts");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TheOpenJournal.Models.Domain.Post", b =>
-                {
-                    b.HasOne("TheOpenJournal.Models.Domain.Tag", null)
-                        .WithMany("Posts")
-                        .HasForeignKey("TagId");
-
-                    b.HasOne("TheOpenJournal.Models.Domain.UserModel", "User")
-                        .WithMany("Posts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TheOpenJournal.Models.Domain.Tag", b =>
-                {
-                    b.Navigation("Posts");
-                });
-
-            modelBuilder.Entity("TheOpenJournal.Models.Domain.UserModel", b =>
-                {
-                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

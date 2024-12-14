@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TheOpenJournal.Data;
@@ -11,9 +12,10 @@ using TheOpenJournal.Data;
 namespace TheOpenJournal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241214152459_RemovedTags")]
+    partial class RemovedTags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,7 +280,7 @@ namespace TheOpenJournal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8eecc5f1-f7e7-4e7c-a7e3-c9831a95c48a"),
+                            Id = new Guid("0b384ff3-e93b-42fd-b02f-e1f228282ae5"),
                             Email = "admin@gmail.com",
                             FullName = "Admin",
                             IsActive = true,
@@ -288,7 +290,7 @@ namespace TheOpenJournal.Migrations
                         },
                         new
                         {
-                            Id = new Guid("a0bcb57c-9c77-415d-93eb-96fcc453739c"),
+                            Id = new Guid("358ac56d-3477-46df-bd7c-0eb8cf2efe78"),
                             Email = "raju@gmail.com",
                             FullName = "Raju",
                             IsActive = true,
@@ -381,18 +383,12 @@ namespace TheOpenJournal.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Slug")
                         .IsUnique();
 
                     b.HasIndex("TagId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Posts");
                 });
@@ -520,22 +516,9 @@ namespace TheOpenJournal.Migrations
                     b.HasOne("TheOpenJournal.Models.Domain.Tag", null)
                         .WithMany("Posts")
                         .HasForeignKey("TagId");
-
-                    b.HasOne("TheOpenJournal.Models.Domain.UserModel", "User")
-                        .WithMany("Posts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TheOpenJournal.Models.Domain.Tag", b =>
-                {
-                    b.Navigation("Posts");
-                });
-
-            modelBuilder.Entity("TheOpenJournal.Models.Domain.UserModel", b =>
                 {
                     b.Navigation("Posts");
                 });

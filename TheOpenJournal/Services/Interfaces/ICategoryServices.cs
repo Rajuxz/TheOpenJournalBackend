@@ -5,9 +5,9 @@ namespace TheOpenJournal.Services.Interfaces
 {
     public interface ICategoryServices
     {
-        public Task<ActionResult> CreateCategoryAsync(CategoryDTO categoryDto);
-        public Task<ActionResult> UpdateCategoryAsync(Guid categoryId,CategoryDTO categoryDto);
-        public Task<ActionResult> DeleteCategoryAsync(Guid categoryId);
-        public Task<ActionResult<IQueryable<CategoryDTO>>> GetCategoriesAsync();
+        public Task<bool> CreateCategoryAsync(CategoryDTO categoryDto);
+        public Task<bool> UpdateCategoryAsync(UpdateCategoryDTO categoryDto);
+        public Task<bool> DeleteCategoryAsync(Guid categoryId);
+        public Task<List<CategoryDTO>> GetCategoriesAsync();
     }
 }

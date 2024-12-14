@@ -8,6 +8,7 @@
         Task<T> GetByIdAsync(Guid id);
         public IQueryable<T> GetQueryable();
         Task<int> SaveAsync();
+        Task<int> AddRangeAsync(IEnumerable<T> entity);
 
     }
 }

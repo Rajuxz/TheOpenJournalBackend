@@ -17,67 +17,89 @@ namespace TheOpenJournal.Services.Implementation
             _repository = repository;
             _mapper = mapper;
         }
-        public async Task<ActionResult> CreateCategoryAsync(CategoryDTO categoryDto)
+        public async Task<bool> CreateCategoryAsync(CategoryDTO categoryDto)
         {
             //if category is null or empty
             if (categoryDto == null) {
-                return new BadRequestObjectResult("Category name is null");
+                return false;
             }
             //map categoryDto to category
             //here Map<Destination>(source)
             var category = _mapper.Map<Category>(categoryDto);
+
+            //check if category already exists:
+            var exists = _repository.GetQueryable()
+                        .Any(c=>c.Name.ToLower() == categoryDto.Name.ToLower());
+
+            if (exists)
+            {
+                return false;
+            }
             //call repository and add the category
             int response = await _repository.AddAsync(category);
 
             //if response is 0 or less, it is internal server error.
             if (response <= 0)
             {
-                //send internal server error
-                return new StatusCodeResult(500);
+                //send false
+                return false;
             }
             
                 //send success response.
-              return new OkResult();
+              return true ;
         }
 
-        public Task<ActionResult> DeleteCategoryAsync(Guid categoryId)
+        public async Task<bool> DeleteCategoryAsync(Guid categoryId)
         {
-            throw new NotImplementedException();
+            //find category
+            var category = await _repository.GetByIdAsync(categoryId);
+            //if category not found, then just return false.
+            if(category == null)
+            {
+                return false;
+
+            }
+            else
+            {
+
+                //otherwise, delete data
+                int response = await _repository.DeleteAsync(category);
+                //if negative response, delete fail else true
+                return response < 0 ? false : true;
+            }
         }
 
-        public async Task<ActionResult<IQueryable<CategoryDTO>>> GetCategoriesAsync()
+        public async Task<List<CategoryDTO>> GetCategoriesAsync()
         {
-
-            var query = _repository.GetQueryable();
-            var categoryDto = query.Select(category => new CategoryDTO
+            var categories = _repository.GetQueryable().Select(category => new CategoryDTO
             {
                 Id = category.Id,
                 Name = category.Name,
             });
-            var result = await categoryDto.ToListAsync();
-            return new OkObjectResult(result);
+
+            return await categories.ToListAsync();
         }
 
-        public async Task<ActionResult> UpdateCategoryAsync(Guid categoryId, CategoryDTO categoryDto)
+        public async Task<bool> UpdateCategoryAsync(UpdateCategoryDTO categoryDto)
         {
             //check if category exists or not.
-            var existingCategory = await _repository.GetByIdAsync(categoryId);
+            
+            var existingCategory = await _repository.GetByIdAsync(categoryDto.Id);
             //if category exists:
             if(existingCategory != null)
             {
                 //change the category
                 existingCategory.Name = categoryDto.Name;
                 //save the category again !
-                await _repository.UpdateAsync(existingCategory);
-                int status = await _repository.SaveAsync();
+                int status = await _repository.UpdateAsync(existingCategory);
                 if(status <= 0)
                 {
-                    return new StatusCodeResult(500);
+                    return false;
                 }
-                return new OkResult();
+                return true;
             }
 
-            return new BadRequestObjectResult("No Category Found");
+            return false;
            // var categoryDto = _mapper.Map<CategoryDTO>(categories);
         }
 

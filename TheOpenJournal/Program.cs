@@ -48,7 +48,7 @@ builder.Services.AddScoped<ITagRepository,TagRepository>();
 builder.Services.AddScoped<IAuthServices,AuthServices>();
 builder.Services.AddScoped<IBlogService, BlogService>();
 builder.Services.AddScoped<ICategoryServices, CategoryService>();
-
+builder.Services.AddScoped<IPostService, PostService>();
 
 
 

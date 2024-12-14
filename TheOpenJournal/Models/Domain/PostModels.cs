@@ -18,16 +18,18 @@ namespace TheOpenJournal.Models.Domain
         public string? FeaturedImageUrl { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
+        //[Required]
+        //public ICollection<Tag> Tags { get; set; } = new List<Tag>();
         [Required]
-        public ICollection<Tag> Tags { get; set; } = new List<Tag>();
-        [Required]
-
-        [ForeignKey(nameof(Category))]
-        public Guid CategoryId { get; set; }
-        public virtual Category Category { get; set; }
+        public ICollection<Category> Categories { get; set; } = new List<Category>();
         public int LikeCount { get; set; } = 0;
         public int CommentCount { get; set; } = 0;
         public int UniqueViewCount { get; set; } = 0;
+
+        [Required]
+        [ForeignKey(nameof(UserModel))]
+        public string UserId { get; set; }
+        public virtual UserModel User { get; set; }
     }
     //Category model.
     public class Category
@@ -36,7 +38,7 @@ namespace TheOpenJournal.Models.Domain
         public Guid Id { get; set; } = Guid.NewGuid();
         [Required]
         public string Name { get; set; }
-
+        public ICollection<Post> Posts { get; set; } = new List<Post>();
     }
     //Comment model.
     public class Comment

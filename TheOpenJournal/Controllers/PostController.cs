@@ -21,15 +21,18 @@ namespace TheOpenJournal.Controllers
             return Ok();
         }
         [HttpPost("add-post")]
-        public async Task<IActionResult> AddPost(PostDTO postDto)
+        public async Task<IActionResult> AddPost([FromForm]PostDTO postDto)
         {
             if (ModelState.IsValid)
             {
-                return Ok(postDto);
+                postDto.User = User.Identity.Name;
+                var res = _postService.AddPostAsync(postDto);
+                return Ok(res);
             }
             else
             {
-                return BadRequest();
+                return BadRequest(new { message ="Please provide all the data."});
+
             }
         }
     }

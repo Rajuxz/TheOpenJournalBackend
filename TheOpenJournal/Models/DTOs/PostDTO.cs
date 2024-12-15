@@ -14,8 +14,7 @@ namespace TheOpenJournal.Models.DTOs
         [Required]
         public string Slug { get; set; }
         public IFormFile? FeaturedImage { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
-        List<Guid> CategoryId { get; set; } = new List<Guid>();
+        public List<Guid> CategoryId { get; set; } = new List<Guid>();
+        public string? User { get; set; }
     }
 }

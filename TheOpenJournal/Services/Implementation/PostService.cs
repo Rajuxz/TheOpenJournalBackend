@@ -1,4 +1,7 @@
-﻿using TheOpenJournal.Models.DTOs;
+﻿using AutoMapper;
+using TheOpenJournal.Mapper;
+using TheOpenJournal.Models.Domain;
+using TheOpenJournal.Models.DTOs;
 using TheOpenJournal.Repository.Interfaces;
 using TheOpenJournal.Services.Interfaces;
 
@@ -7,13 +10,20 @@ namespace TheOpenJournal.Services.Implementation
     public class PostService:IPostService
     {
         private readonly IPostRepository _repository;
-        public PostService(IPostRepository repository){ 
+        private readonly IMapper _mapper;
+        public PostService(IPostRepository repository,IMapper mapper){ 
             _repository = repository;
+            _mapper = mapper;
         }
 
-        public async Task<bool> AddPostAsync(PostDTO postDto)
+        public async Task<Post> AddPostAsync(PostDTO postDto)
         {
-            return false;
+            
+            var post =  _mapper.Map<Post>(postDto);
+            //map categories
+            post.Categories = postDto.CategoryId.Select(id=>new Category {Id = id}).ToList();
+            //user
+            return post;
         }
     }
 }

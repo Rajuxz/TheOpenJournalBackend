@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TheOpenJournal.Models.DTOs;
 using TheOpenJournal.Services.Interfaces;
 
@@ -25,9 +26,10 @@ namespace TheOpenJournal.Controllers
         {
             if (ModelState.IsValid)
             {
-                postDto.User = User.Identity.Name;
+                var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                postDto.User = userId;
                 var res = _postService.AddPostAsync(postDto);
-                return Ok(res);
+                return Ok(new { res, userId });
             }
             else
             {

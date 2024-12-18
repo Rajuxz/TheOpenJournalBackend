@@ -43,12 +43,14 @@ builder.Services.AddScoped(typeof(IRepository<>),typeof(Repository<>));
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ITagRepository,TagRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // ----------------------[ Add Dependencies for Services Here ] -------------- //
 builder.Services.AddScoped<IAuthServices,AuthServices>();
 builder.Services.AddScoped<IBlogService, BlogService>();
 builder.Services.AddScoped<ICategoryServices, CategoryService>();
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IUtilityService,UtilityService>();
 
 
 

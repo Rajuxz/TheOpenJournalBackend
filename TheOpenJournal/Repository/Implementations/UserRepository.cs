@@ -16,5 +16,11 @@ namespace TheOpenJournal.Repository.Implementations
         {
             return await _context.Users.FirstOrDefaultAsync(x => x.Email == email);
         }
+
+        public async Task<string> GetIdByEmailAsync(string email)
+        {
+            var user =  await _context.Users.FirstOrDefaultAsync(x=>x.Email == email);
+            return user?.Id;
+        }
     }
 }

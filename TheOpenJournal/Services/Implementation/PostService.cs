@@ -39,7 +39,10 @@ namespace TheOpenJournal.Services.Implementation
                 {
                     post.FeaturedImageUrl = url;
                 }
-                post.FeaturedImageUrl = null;
+                else
+                {
+                    post.FeaturedImageUrl = null;
+                }
             }
             //map categories
             var categories = _categoryRepository.GetQueryable()

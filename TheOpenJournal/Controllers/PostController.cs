@@ -28,14 +28,28 @@ namespace TheOpenJournal.Controllers
             {
                 var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
                 postDto.User = userId;
-                var res = _postService.AddPostAsync(postDto);
-                return Ok(new { res, userId });
+                bool response = await _postService.AddPostAsync(postDto);
+                if (response)
+                {
+                    return Ok(new { message = "Post added successfully" });
+                }
+                else
+                {
+                    return BadRequest(new { message = "Something went wrong. Please try again later." });
+                }
             }
             else
             {
                 return BadRequest(new { message ="Please provide all the data."});
 
             }
+        }
+
+        [HttpGet("get-posts")]
+        public async Task<IActionResult> GetAllPost()
+        {
+            var response = await _postService.GetPostsAsync();
+            return Ok(response);
         }
     }
 }

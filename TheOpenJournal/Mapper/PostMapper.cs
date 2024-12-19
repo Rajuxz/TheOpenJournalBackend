@@ -7,6 +7,7 @@ namespace TheOpenJournal.Mapper
     public class PostMapper:Profile
     {
         public PostMapper() {
+            //PostDto to Post
             CreateMap<PostDTO, Post>()
                 .ForMember(dest=>dest.Id,opt=>opt.Ignore())
                 .ForMember(dest => dest.FeaturedImageUrl, opt => opt.Ignore())
@@ -19,6 +20,10 @@ namespace TheOpenJournal.Mapper
                 .ForMember(dest => dest.CreatedAt,opt=>opt.Ignore())
                 .ForMember(dest =>  dest.UpdatedAt,opt=>opt.Ignore())
                 ;
+
+            //Post to PostDto
+           
+                
         }
     }
 }

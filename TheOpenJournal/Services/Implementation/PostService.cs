@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using TheOpenJournal.Mapper;
 using TheOpenJournal.Models.Domain;
 using TheOpenJournal.Models.DTOs;
@@ -29,21 +30,10 @@ namespace TheOpenJournal.Services.Implementation
         {
             
             var post =  _mapper.Map<Post>(postDto);
-            if (postDto.FeaturedImage == null)
+            if (postDto.FeaturedImage != null)
             {
-                post.FeaturedImageUrl = null;
-            }
-            else
-            {
-                string url = await _utilityService.SaveImage(postDto.FeaturedImage);
-                if (url != null)
-                {
-                    post.FeaturedImageUrl = url;
-                }
-                else
-                {
-                    post.FeaturedImageUrl = null;
-                }
+                string url = await _utilityService.SaveImageAsync(postDto.FeaturedImage);
+                post.FeaturedImageUrl = url ?? post.FeaturedImageUrl;
             }
             //map categories
             var categories = _categoryRepository.GetQueryable()
@@ -66,39 +56,23 @@ namespace TheOpenJournal.Services.Implementation
             }
         }
         //Method for Getting all posts.
-        public async Task<List<PostDTO>> GetPostsAsync()
+        public async Task<List<GetPostDTO>> GetPostsAsync()
         {
             try
             {
                 //get all posts from database
-                var posts = _postRepository.GetQueryable();
+                var posts = await _postRepository.GetQueryable()
+                    .Include(category=>category.Categories)
+                    .Include(user=>user.User)
+                    .ToListAsync();
 
-                //map the posts into PostDto
+                //map the posts into GetPostDto
+                var allPosts = _mapper.Map<List<GetPostDTO>>(posts);
                 // return posts to controller.
 
 
-                var data = new List<PostDTO>
-                {
-                     new PostDTO
-                     {
-                        Title = "Learn Async/Await in C#",
-                        Content = "This post explains how to use async/await in C# for better performance.",
-                        Slug = "learn-async-await-csharp",
-                        FeaturedImage = null, // Normally this would be a file uploaded by the user
-                        CategoryId = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() },
-                        User = "John Doe"
-                     },
-                    new PostDTO
-                     {
-                        Title = "Learn Async/Await in C++",
-                        Content = "This post explains how to use async/await in C++ for better performance.",
-                        Slug = "learn-async-await-csharp",
-                        FeaturedImage = null, // Normally this would be a file uploaded by the user
-                        CategoryId = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() },
-                        User = "John Doe"
-                     },
-                };
-                return data;
+                return allPosts;
+                
 
             }catch(Exception ex)
             {

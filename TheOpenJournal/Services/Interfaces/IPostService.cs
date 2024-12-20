@@ -6,6 +6,6 @@ namespace TheOpenJournal.Services.Interfaces
     public interface IPostService
     {
         Task<bool> AddPostAsync(PostDTO postDto);
-        Task<List<PostDTO>> GetPostsAsync();
+        Task<List<GetPostDTO>> GetPostsAsync();
     }
 }

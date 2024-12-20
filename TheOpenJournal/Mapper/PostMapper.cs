@@ -21,9 +21,13 @@ namespace TheOpenJournal.Mapper
                 .ForMember(dest =>  dest.UpdatedAt,opt=>opt.Ignore())
                 ;
 
-            //Post to PostDto
-           
-                
+            //Post to GetPostDto
+
+            CreateMap<Post, GetPostDTO>()
+                .ForMember(dest=>dest.Categories,opt=>opt.MapFrom(src=>src.Categories))
+                .ForMember(dest=>dest.UserId,src=>src.MapFrom(src=>src.UserId));
+
+            CreateMap<Category, CategoryDTO>();
         }
     }
 }

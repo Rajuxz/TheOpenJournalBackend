@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using TheOpenJournal.Models.Domain;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace TheOpenJournal.Models.DTOs
 {
@@ -19,7 +20,7 @@ namespace TheOpenJournal.Models.DTOs
     }
 
     // PostDTO for Retrieving Posts.
-    class GetPostDTO
+    public class GetPostDTO
     {
         public string Title { get; set; }
         public string Content { get; set; }
@@ -27,7 +28,7 @@ namespace TheOpenJournal.Models.DTOs
         public string? FeaturedImageUrl { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
-        public ICollection<Category> Categories { get; set; } = new List<Category>();
+        public ICollection<CategoryDTO> Categories { get; set; } = new List<CategoryDTO>();
         public int LikeCount { get; set; } = 0;
         public int CommentCount { get; set; } = 0;
         public int UniqueViewCount { get; set; } = 0;

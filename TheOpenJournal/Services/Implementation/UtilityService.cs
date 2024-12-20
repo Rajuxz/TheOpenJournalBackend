@@ -11,8 +11,8 @@ namespace TheOpenJournal.Services.Implementation
             _environment = environment;
             _httpContextAccessor = httpContextAccessor;
         }
-
-        public async Task<string> SaveImage(IFormFile file)
+        
+        public async Task<string> SaveImageAsync(IFormFile file)
         {
             //check if file is properly passed or not.
             if (file == null || file.Length == 0) {

@@ -51,5 +51,18 @@ namespace TheOpenJournal.Controllers
             var response = await _postService.GetPostsAsync();
             return Ok(response);
         }
+        [HttpGet("get-posts-by-id/{categoryId}")]
+        public async Task<IActionResult> GetPostByCategory([FromRoute] string categoryId)
+        {
+            if (Guid.TryParse(categoryId,out Guid categoryGuid))
+            {
+                var response = await _postService.GetPostsByCategoryAsync(categoryGuid);
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest(new { message = "Error, Invalid CategoryId found." });
+            }
+        }
     }
 }

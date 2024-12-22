@@ -79,5 +79,20 @@ namespace TheOpenJournal.Services.Implementation
                 throw new Exception("Exception While Getting Post: " + ex);
             }
         }
+
+        public async Task<GetPostDTO> GetPostsByCategoryAsync(Guid guid)
+        {
+            try
+            {
+                var posts = _categoryRepository.GetQueryable()
+                    .Include(post=>post.Id == guid);
+
+
+
+            }catch(Exception ex)
+            {
+                throw new Exception("Exception while getting Posts !" + ex);
+            }
+        }
     }
 }

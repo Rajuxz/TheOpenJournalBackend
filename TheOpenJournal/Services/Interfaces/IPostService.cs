@@ -7,5 +7,6 @@ namespace TheOpenJournal.Services.Interfaces
     {
         Task<bool> AddPostAsync(PostDTO postDto);
         Task<List<GetPostDTO>> GetPostsAsync();
+        Task<GetPostDTO> GetPostsByCategoryAsync(Guid guid);
     }
 }

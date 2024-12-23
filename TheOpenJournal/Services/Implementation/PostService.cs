@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using TheOpenJournal.Mapper;
 using TheOpenJournal.Models.Domain;
 using TheOpenJournal.Models.DTOs;
 using TheOpenJournal.Repository.Interfaces;
@@ -79,20 +78,34 @@ namespace TheOpenJournal.Services.Implementation
                 throw new Exception("Exception While Getting Post: " + ex);
             }
         }
-
-        public async Task<GetPostDTO> GetPostsByCategoryAsync(Guid guid)
+        //GetPostsByCategoryAsync
+        public async Task<List<GetPostDTO>> GetPostsByCategoryAsync(Guid guid)
         {
             try
             {
-                var posts = _categoryRepository.GetQueryable()
-                    .Include(post=>post.Id == guid);
+                var posts =await _categoryRepository.GetQueryable()
+                    .Where(category => category.Id == guid)
+                    .SelectMany(category => category.Posts)
+                    .ToListAsync();
 
-
-
+                var getPostDto = _mapper.Map<List<GetPostDTO>>(posts);
+                return getPostDto;
             }catch(Exception ex)
             {
                 throw new Exception("Exception while getting Posts !" + ex);
             }
         }
+
+        // Update Posts
+       public async Task<bool> UpdatePostAsync(UpdatePostDTO updatePostDto)
+       {
+            try
+            {
+                return true;
+            }catch(Exception ex)
+            {
+                throw new Exception("Exception while updating post !"+ex.Message);
+            }
+       }
     }
 }

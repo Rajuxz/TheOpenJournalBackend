@@ -28,6 +28,10 @@ namespace TheOpenJournal.Mapper
                 .ForMember(dest=>dest.UserId,src=>src.MapFrom(src=>src.UserId));
 
             CreateMap<Category, CategoryDTO>();
+
+            //Map non-null fields only.
+            CreateMap<UpdatePostDTO, Post>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

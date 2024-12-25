@@ -14,7 +14,7 @@ namespace TheOpenJournal.Controllers
         private readonly IPostService _postService;
         public PostController(IPostService postService)
         {
-            _postService = postService;            
+            _postService = postService;
         }
         [HttpGet("index")]
         public IActionResult Index()
@@ -22,7 +22,7 @@ namespace TheOpenJournal.Controllers
             return Ok();
         }
         [HttpPost("add-post")]
-        public async Task<IActionResult> AddPost([FromForm]PostDTO postDto)
+        public async Task<IActionResult> AddPost([FromForm] PostDTO postDto)
         {
             if (ModelState.IsValid)
             {
@@ -40,7 +40,7 @@ namespace TheOpenJournal.Controllers
             }
             else
             {
-                return BadRequest(new { message ="Please provide all the data."});
+                return BadRequest(new { message = "Please provide all the data." });
 
             }
         }
@@ -54,7 +54,7 @@ namespace TheOpenJournal.Controllers
         [HttpGet("get-posts-by-id/{categoryId}")]
         public async Task<IActionResult> GetPostByCategory([FromRoute] string categoryId)
         {
-            if (Guid.TryParse(categoryId,out Guid categoryGuid))
+            if (Guid.TryParse(categoryId, out Guid categoryGuid))
             {
                 var response = await _postService.GetPostsByCategoryAsync(categoryGuid);
                 return Ok(response);
@@ -63,6 +63,24 @@ namespace TheOpenJournal.Controllers
             {
                 return BadRequest(new { message = "Error, Invalid CategoryId found." });
             }
+        }
+
+        [HttpPatch("update-post")]
+        public async Task<IActionResult> UpdatePost(UpdatePostDTO updatePostDto)
+        {
+            if (ModelState.IsValid)
+            {
+                bool isUpdated = await _postService.UpdatePostAsync(updatePostDto);
+                if (isUpdated)
+                {
+                    return Ok(new {message="Post Update Successfully !"});
+                }
+                else
+                {
+                    return BadRequest(new { message = "Cannot Update Post !" });
+                }
+            }
+            return BadRequest(new {message="Invalid Model State"});
         }
     }
 }

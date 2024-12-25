@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Razor.TagHelpers;
 using Microsoft.EntityFrameworkCore;
 using TheOpenJournal.Models.Domain;
 using TheOpenJournal.Models.DTOs;
@@ -101,7 +102,26 @@ namespace TheOpenJournal.Services.Implementation
        {
             try
             {
-                return true;
+                //check if post id is correct.
+                var post = await _postRepository.GetByIdAsync(updatePostDto.Id);
+                if (post != null)
+                {
+                    //if post exists, update updated fields.
+                    _mapper.Map(updatePostDto, post);
+                    int response = await _postRepository.UpdateAsync(post);
+                    if(response <= 0)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
             }catch(Exception ex)
             {
                 throw new Exception("Exception while updating post !"+ex.Message);

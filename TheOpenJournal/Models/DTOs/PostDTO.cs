@@ -22,6 +22,7 @@ namespace TheOpenJournal.Models.DTOs
     // PostDTO for Retrieving Posts.
     public class GetPostDTO
     {
+        public Guid Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public string Slug { get; set; }

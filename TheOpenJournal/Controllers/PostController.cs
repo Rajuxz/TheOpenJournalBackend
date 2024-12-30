@@ -66,7 +66,7 @@ namespace TheOpenJournal.Controllers
         }
 
         [HttpPatch("update-post")]
-        public async Task<IActionResult> UpdatePost(UpdatePostDTO updatePostDto)
+        public async Task<IActionResult> UpdatePost([FromForm]UpdatePostDTO updatePostDto)
         {
             if (ModelState.IsValid)
             {

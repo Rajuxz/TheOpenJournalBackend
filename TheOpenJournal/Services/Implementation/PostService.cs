@@ -108,6 +108,16 @@ namespace TheOpenJournal.Services.Implementation
                 {
                     //if post exists, update updated fields.
                     _mapper.Map(updatePostDto, post);
+
+                    if(updatePostDto.Categories != null)
+                    {
+                        post.Categories.Clear();
+                        foreach(var categories in updatePostDto.Categories)
+                        {
+                            post.Categories.Add(new Category { Id = categories.Id });
+                        }
+                    }
+
                     int response = await _postRepository.UpdateAsync(post);
                     if(response <= 0)
                     {

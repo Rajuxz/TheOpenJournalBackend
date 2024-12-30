@@ -12,4 +12,5 @@ namespace TheOpenJournal.Models.DTOs
         public Guid Id { get; set; }
         public string Name { get; set; }
     }
+    
 }

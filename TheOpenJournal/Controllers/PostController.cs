@@ -82,5 +82,12 @@ namespace TheOpenJournal.Controllers
             }
             return BadRequest(new {message="Invalid Model State"});
         }
+        [HttpGet("get-by-user")]
+        public async Task<IActionResult> GetByUserId()
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var posts = await _postService.GetPostByUserIdAsync(userId);
+            return Ok(posts);
+        }
     }
 }

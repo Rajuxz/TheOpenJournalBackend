@@ -137,5 +137,36 @@ namespace TheOpenJournal.Services.Implementation
                 throw new Exception("Exception while updating post !"+ex.Message);
             }
        }
+        //Get post posted by specific user.
+        public async Task<List<GetPostDTO>> GetPostByUserIdAsync(string email)
+        {
+            try
+            {
+                if (email != null)
+                {
+                    var userId = await _userRepository.GetIdByEmailAsync(email);
+                    var posts =await _postRepository.GetQueryable()
+                        .Where(post => post.UserId == userId)
+                        .ToListAsync();
+                    //map to GetPostDto
+                    if(posts.Count > 0)
+                    {
+                        var postDto = _mapper.Map<List<GetPostDTO>>(posts);
+                        return postDto;
+                    }
+                    else
+                    {
+                        return new List<GetPostDTO>();
+                    }
+                }
+                else
+                {
+                    throw new Exception("Invalid email provided");
+                }
+            }catch(Exception ex)
+            {
+                throw new Exception("Exception in GetPostByUserIdAsync Method" + ex.Message);
+            }
+        }
     }
 }

@@ -10,6 +10,7 @@ namespace TheOpenJournal.Models.Domain
         public Guid Id { get; set; } = Guid.NewGuid();
         [Required]
         public string Title { get; set; }
+        [Column(TypeName ="text")]
         [Required]
         public string Content { get; set; }
 

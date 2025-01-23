@@ -49,7 +49,7 @@ namespace TheOpenJournal.Controllers
         public async Task<IActionResult> GetAllPost()
         {
             var response = await _postService.GetPostsAsync();
-            return Ok(response);
+            return Ok( new {data = response });
         }
         [HttpGet("get-posts-by-id/{categoryId}")]
         public async Task<IActionResult> GetPostByCategory([FromRoute] string categoryId)

@@ -11,5 +11,6 @@ namespace TheOpenJournal.Services.Interfaces
         Task<bool> UpdatePostAsync(UpdatePostDTO updatePostDto);
         Task<List<GetPostDTO>> GetPostByUserIdAsync(string email);
 
+
     }
 }

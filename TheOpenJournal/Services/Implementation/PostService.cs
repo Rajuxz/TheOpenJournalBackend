@@ -15,14 +15,17 @@ namespace TheOpenJournal.Services.Implementation
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IUtilityService _utilityService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public PostService(IPostRepository postRepository, IMapper mapper,
             ICategoryRepository categoryRepository,
+            IHttpContextAccessor httpContextAccessor,
             IUserRepository userRepository, IUtilityService utilityService){ 
             _postRepository = postRepository;
             _mapper = mapper;
             _categoryRepository = categoryRepository;
             _userRepository = userRepository;
             _utilityService = utilityService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         //Service for adding posts.
@@ -84,7 +87,7 @@ namespace TheOpenJournal.Services.Implementation
         {
             try
             {
-                var posts =await _categoryRepository.GetQueryable()
+                var posts = await _categoryRepository.GetQueryable()
                     .Where(category => category.Id == guid)
                     .SelectMany(category => category.Posts)
                     .ToListAsync();

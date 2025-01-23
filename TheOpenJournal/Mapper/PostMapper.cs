@@ -24,9 +24,10 @@ namespace TheOpenJournal.Mapper
 
             //Post to GetPostDto
 
-            CreateMap<Post, GetPostDTO>()
-                .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.Categories))
-                .ForMember(dest => dest.UserId, src => src.MapFrom(src => src.UserId));
+          CreateMap<Post, GetPostDTO>()
+            .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.Categories))
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId));
+
 
             CreateMap<Category, CategoryDTO>();
 

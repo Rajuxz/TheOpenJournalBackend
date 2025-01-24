@@ -10,6 +10,8 @@ namespace TheOpenJournal.Services.Interfaces
         Task<List<GetPostDTO>> GetPostsByCategoryAsync(Guid guid);
         Task<bool> UpdatePostAsync(UpdatePostDTO updatePostDto);
         Task<List<GetPostDTO>> GetPostByUserIdAsync(string email);
+        Task<GetPostDTO> GetPostBySlugAsync(string slug);
+
 
 
     }

@@ -89,5 +89,12 @@ namespace TheOpenJournal.Controllers
             var posts = await _postService.GetPostByUserIdAsync(userId);
             return Ok(posts);
         }
+
+        [HttpGet("get-by-slug/{slug}")]
+        public async Task<IActionResult> GetBySlug([FromRoute]string slug)
+        {
+            var post = await _postService.GetPostBySlugAsync(slug);
+            return Ok( new { post = post});
+        }
     }
 }

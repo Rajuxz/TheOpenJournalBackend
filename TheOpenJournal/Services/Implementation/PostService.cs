@@ -171,5 +171,31 @@ namespace TheOpenJournal.Services.Implementation
                 throw new Exception("Exception in GetPostByUserIdAsync Method" + ex.Message);
             }
         }
+        public async Task<GetPostDTO> GetPostBySlugAsync(string slug)
+        {
+            try
+            {
+                if(slug != null)
+                {
+                    var post = await _postRepository.GetQueryable().Where(post=>post.Slug == slug).FirstOrDefaultAsync();
+                    if (post != null)
+                    {
+                        var postDto = _mapper.Map<GetPostDTO>(post);
+                        return postDto;
+                    }
+                    else
+                    {
+                        throw new Exception("Posts Not Found!");
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("Slug cannot be null");                    
+                }
+            }catch(Exception ex)
+            {
+                throw new Exception("Exception in GetPostBySLug Method: " + ex.Message);
+            }
+        }
     }
 }

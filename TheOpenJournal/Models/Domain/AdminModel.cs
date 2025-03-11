@@ -1,4 +1,6 @@
-﻿namespace TheOpenJournal.Models.Domain
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace TheOpenJournal.Models.Domain
 {
     public class AdminModel
     {

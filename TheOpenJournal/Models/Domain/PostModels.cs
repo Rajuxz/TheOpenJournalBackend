@@ -10,8 +10,9 @@ namespace TheOpenJournal.Models.Domain
         public Guid Id { get; set; } = Guid.NewGuid();
         [Required]
         public string Title { get; set; }
-        [Column(TypeName ="text")]
+
         [Required]
+        [Column(TypeName ="text")]
         public string Content { get; set; }
 
         [Required]
@@ -19,18 +20,16 @@ namespace TheOpenJournal.Models.Domain
         public string? FeaturedImageUrl { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
-        //[Required]
-        //public ICollection<Tag> Tags { get; set; } = new List<Tag>();
-        [Required]
+       
+       
         public ICollection<Category> Categories { get; set; } = new List<Category>();
-        public int LikeCount { get; set; } = 0;
-        public int CommentCount { get; set; } = 0;
-        public int UniqueViewCount { get; set; } = 0;
+        public virtual ICollection<Like> Likes { get; set; } = new List<Like>();
 
-        [Required]
+
         [ForeignKey(nameof(UserModel))]
         public string UserId { get; set; }
         public virtual UserModel User { get; set; }
+
     }
     //Category model.
     public class Category
@@ -55,6 +54,16 @@ namespace TheOpenJournal.Models.Domain
         [Required]
         public string CommentedText { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    }
+    //Like Model
+    public class Like
+    {
+        public int Id { get; set; }
+        public string UserId { get; set; }
+        public Guid PostId { get; set; }
+        public DateTime LikedAt { get; set; } = DateTime.UtcNow;
+        public virtual UserModel User { get; set; }
+        public virtual Post Post { get; set; }
     }
     //Tag model.
     public class Tag

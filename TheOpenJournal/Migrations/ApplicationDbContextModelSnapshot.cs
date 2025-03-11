@@ -278,21 +278,21 @@ namespace TheOpenJournal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("00e21a92-4d7f-4035-92d2-7ff2158d81d9"),
+                            Id = new Guid("eb0d69e5-5ae0-45c2-a101-0efef794ae2d"),
                             Email = "admin@gmail.com",
                             FullName = "Admin",
                             IsActive = true,
-                            Password = "12345",
+                            Password = "AQAAAAEAACcQAAAAEMK3L38WjX90uvZ5Tq+Np7AOu0Y9XFzh/vFWp8dDBp6xsJ2nxUidoRib4mnlzclVKQ==",
                             PhoneNumber = "9814964044",
                             Username = "Admin"
                         },
                         new
                         {
-                            Id = new Guid("e92c98de-b2ba-4ccc-a8fc-84de26138ecd"),
+                            Id = new Guid("717a6d12-ab22-492a-86eb-469ceede5013"),
                             Email = "raju@gmail.com",
                             FullName = "Raju",
                             IsActive = true,
-                            Password = "R@ju_1",
+                            Password = "AQAAAAEAACcQAAAAEKZ7+buT9BkPId1PW8inI8YbEksr+OTCGB5L7V15YXhdN0OebXjubyEIMWmAocbbdA==",
                             PhoneNumber = "9745868539",
                             Username = "Rajuxz"
                         });
@@ -342,14 +342,38 @@ namespace TheOpenJournal.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("TheOpenJournal.Models.Domain.Like", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("LikedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Like");
+                });
+
             modelBuilder.Entity("TheOpenJournal.Models.Domain.Post", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
-
-                    b.Property<int>("CommentCount")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -361,9 +385,6 @@ namespace TheOpenJournal.Migrations
                     b.Property<string>("FeaturedImageUrl")
                         .HasColumnType("text");
 
-                    b.Property<int>("LikeCount")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasColumnType("text");
@@ -374,9 +395,6 @@ namespace TheOpenJournal.Migrations
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("UniqueViewCount")
-                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -515,6 +533,25 @@ namespace TheOpenJournal.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TheOpenJournal.Models.Domain.Like", b =>
+                {
+                    b.HasOne("TheOpenJournal.Models.Domain.Post", "Post")
+                        .WithMany("Likes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TheOpenJournal.Models.Domain.UserModel", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TheOpenJournal.Models.Domain.Post", b =>
                 {
                     b.HasOne("TheOpenJournal.Models.Domain.Tag", null)
@@ -528,6 +565,11 @@ namespace TheOpenJournal.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TheOpenJournal.Models.Domain.Post", b =>
+                {
+                    b.Navigation("Likes");
                 });
 
             modelBuilder.Entity("TheOpenJournal.Models.Domain.Tag", b =>

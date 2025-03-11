@@ -213,18 +213,45 @@ namespace TheOpenJournal.Migrations
                     FeaturedImageUrl = table.Column<string>(type: "text", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CategoryId = table.Column<Guid>(type: "uuid", nullable: false),
-                    LikeCount = table.Column<int>(type: "integer", nullable: true),
-                    CommentCount = table.Column<int>(type: "integer", nullable: true),
-                    UniqueViewCount = table.Column<int>(type: "integer", nullable: true)
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    TagId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Posts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Posts_Categories_CategoryId",
-                        column: x => x.CategoryId,
+                        name: "FK_Posts_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Posts_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CategoryPost",
+                columns: table => new
+                {
+                    CategoriesId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PostsId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CategoryPost", x => new { x.CategoriesId, x.PostsId });
+                    table.ForeignKey(
+                        name: "FK_CategoryPost_Categories_CategoriesId",
+                        column: x => x.CategoriesId,
                         principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CategoryPost_Posts_PostsId",
+                        column: x => x.PostsId,
+                        principalTable: "Posts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -257,25 +284,28 @@ namespace TheOpenJournal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PostTag",
+                name: "Like",
                 columns: table => new
                 {
-                    PostsId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TagsId = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    PostId = table.Column<Guid>(type: "uuid", nullable: false),
+                    LikedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PostTag", x => new { x.PostsId, x.TagsId });
+                    table.PrimaryKey("PK_Like", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PostTag_Posts_PostsId",
-                        column: x => x.PostsId,
-                        principalTable: "Posts",
+                        name: "FK_Like_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PostTag_Tags_TagsId",
-                        column: x => x.TagsId,
-                        principalTable: "Tags",
+                        name: "FK_Like_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -285,8 +315,8 @@ namespace TheOpenJournal.Migrations
                 columns: new[] { "Id", "Email", "FullName", "IsActive", "Password", "PhoneNumber", "ProfileUrl", "Username" },
                 values: new object[,]
                 {
-                    { new Guid("45c9fe40-255e-44c7-b9ad-2cc1bb5e12fc"), "admin@gmail.com", "Admin", true, "12345", "9814964044", null, "Admin" },
-                    { new Guid("708edfdf-60b7-4de8-823b-39a1cb515fce"), "raju@gmail.com", "Raju", true, "R@ju_1", "9745868539", null, "Rajuxz" }
+                    { new Guid("717a6d12-ab22-492a-86eb-469ceede5013"), "raju@gmail.com", "Raju", true, "AQAAAAEAACcQAAAAEKZ7+buT9BkPId1PW8inI8YbEksr+OTCGB5L7V15YXhdN0OebXjubyEIMWmAocbbdA==", "9745868539", null, "Rajuxz" },
+                    { new Guid("eb0d69e5-5ae0-45c2-a101-0efef794ae2d"), "admin@gmail.com", "Admin", true, "AQAAAAEAACcQAAAAEMK3L38WjX90uvZ5Tq+Np7AOu0Y9XFzh/vFWp8dDBp6xsJ2nxUidoRib4mnlzclVKQ==", "9814964044", null, "Admin" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -327,6 +357,11 @@ namespace TheOpenJournal.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_CategoryPost_PostsId",
+                table: "CategoryPost",
+                column: "PostsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comments_PostId",
                 table: "Comments",
                 column: "PostId");
@@ -337,14 +372,30 @@ namespace TheOpenJournal.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Posts_CategoryId",
-                table: "Posts",
-                column: "CategoryId");
+                name: "IX_Like_PostId",
+                table: "Like",
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostTag_TagsId",
-                table: "PostTag",
-                column: "TagsId");
+                name: "IX_Like_UserId",
+                table: "Like",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_Slug",
+                table: "Posts",
+                column: "Slug",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_TagId",
+                table: "Posts",
+                column: "TagId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_UserId",
+                table: "Posts",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -368,25 +419,28 @@ namespace TheOpenJournal.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "CategoryPost");
+
+            migrationBuilder.DropTable(
                 name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "PostTag");
+                name: "Like");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Posts");
 
             migrationBuilder.DropTable(
-                name: "Tags");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Tags");
         }
     }
 }

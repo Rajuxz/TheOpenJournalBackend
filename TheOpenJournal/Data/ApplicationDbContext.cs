@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TheOpenJournal.Models.Domain;
 
@@ -16,6 +17,7 @@ namespace TheOpenJournal.Data
             // as [Index] annotation was introduced in .Net 7
             // Use fluent api to enforce that Slug is unique.
             modelBuilder.Entity<Post>().HasIndex(p=>p.Slug).IsUnique();
+            var hasher = new PasswordHasher<AdminModel>();
             modelBuilder.Entity<AdminModel>().HasData(
                 new AdminModel()
                 {
@@ -23,7 +25,7 @@ namespace TheOpenJournal.Data
                     Username = "Admin",
                     FullName = "Admin",
                     Email = "admin@gmail.com",
-                    Password = "12345",
+                    Password = hasher.HashPassword(null, "12345"),
                     PhoneNumber = "9814964044",
                     IsActive = true,
                 },
@@ -33,7 +35,7 @@ namespace TheOpenJournal.Data
                     Username = "Rajuxz",
                     FullName = "Raju",
                     Email = "raju@gmail.com",
-                    Password = "R@ju_1",
+                    Password = hasher.HashPassword(null,"R@ju_1"),
                     PhoneNumber = "9745868539",
                     IsActive = true,
                 }

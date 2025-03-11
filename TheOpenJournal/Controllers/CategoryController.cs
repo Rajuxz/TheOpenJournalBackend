@@ -16,7 +16,7 @@ namespace TheOpenJournal.Controllers
         { 
             _categoryServices = categoryServices;
         }
-        [HttpPost("create-categories")]
+        [HttpPost]
         public  async Task<IActionResult> CreateCategories(CategoryDTO categoryDto)
         {
             if (ModelState.IsValid)
@@ -34,7 +34,7 @@ namespace TheOpenJournal.Controllers
                 return BadRequest(new {message="Model is not valid."});
             }
         }
-        [HttpGet("get-categories")]
+        [HttpGet]
         public async Task<IActionResult> GetCategories()
         {
             var response = await _categoryServices.GetCategoriesAsync();
@@ -47,7 +47,7 @@ namespace TheOpenJournal.Controllers
             }
         }
 
-        [HttpPut("update-category")]
+        [HttpPatch]
         public async Task<IActionResult> UpdateCategories([FromBody] UpdateCategoryDTO categoryDto)
         {
             if (ModelState.IsValid) {
@@ -63,7 +63,7 @@ namespace TheOpenJournal.Controllers
 
         }
 
-        [HttpDelete("delete-category")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteCategory(Guid id)
         {
             if (id == Guid.Empty)

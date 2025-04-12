@@ -17,6 +17,12 @@ namespace TheOpenJournal.Data
             // as [Index] annotation was introduced in .Net 7
             // Use fluent api to enforce that Slug is unique.
             modelBuilder.Entity<Post>().HasIndex(p=>p.Slug).IsUnique();
+
+            //Composite key for like model.
+            modelBuilder.Entity<Like>().HasKey(key => new { key.PostId, key.UserId});
+
+
+
             var hasher = new PasswordHasher<AdminModel>();
             modelBuilder.Entity<AdminModel>().HasData(
                 new AdminModel()
@@ -47,5 +53,6 @@ namespace TheOpenJournal.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<UserModel> Users { get; set; }
+        public DbSet<Like> Likes { get; set; }
     }
 }

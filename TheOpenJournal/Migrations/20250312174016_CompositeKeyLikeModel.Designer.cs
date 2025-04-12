@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TheOpenJournal.Data;
@@ -11,9 +12,10 @@ using TheOpenJournal.Data;
 namespace TheOpenJournal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250312174016_CompositeKeyLikeModel")]
+    partial class CompositeKeyLikeModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,21 +280,21 @@ namespace TheOpenJournal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b54dc79a-711d-441b-b496-3170ff5270bf"),
+                            Id = new Guid("bfb682e4-9f49-4324-9628-0f99d6b93390"),
                             Email = "admin@gmail.com",
                             FullName = "Admin",
                             IsActive = true,
-                            Password = "AQAAAAEAACcQAAAAEI88ldINAJQczgFYdEp/Gq4dycfWr9E8QAzDFMow1Gv4M9YIYkY8NadSkRaguDA2XQ==",
+                            Password = "AQAAAAEAACcQAAAAECOJDywp/FwQ3u/RrpGha/h1e8g5tnejvNRe3exl0IGOm5oQvbAD8GYZ9hR3aJ8BRQ==",
                             PhoneNumber = "9814964044",
                             Username = "Admin"
                         },
                         new
                         {
-                            Id = new Guid("25168bdb-a90e-44cb-a90e-8f95d613a42c"),
+                            Id = new Guid("1c39a4d4-7ee3-4570-b53b-3e8e859a47fb"),
                             Email = "raju@gmail.com",
                             FullName = "Raju",
                             IsActive = true,
-                            Password = "AQAAAAEAACcQAAAAEJn6mS8ic8q3CeTbGkd6G5PvgEp2XRuDUKFzP9rVLDGbZtkt8GiWkbmZ3JxE/vdKXg==",
+                            Password = "AQAAAAEAACcQAAAAEM6Y0Z3S1TckMd3Yt1qDOdM2h6qf+BLsTvML5P3agZC+UK+k2z76xxkP3DC+uLlJyw==",
                             PhoneNumber = "9745868539",
                             Username = "Rajuxz"
                         });
@@ -357,7 +359,7 @@ namespace TheOpenJournal.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Likes");
+                    b.ToTable("Like");
                 });
 
             modelBuilder.Entity("TheOpenJournal.Models.Domain.Post", b =>

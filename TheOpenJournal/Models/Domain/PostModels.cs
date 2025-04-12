@@ -58,8 +58,9 @@ namespace TheOpenJournal.Models.Domain
     //Like Model
     public class Like
     {
-        public int Id { get; set; }
+        [Key]
         public string UserId { get; set; }
+        [Key]
         public Guid PostId { get; set; }
         public DateTime LikedAt { get; set; } = DateTime.UtcNow;
         public virtual UserModel User { get; set; }

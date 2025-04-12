@@ -16,12 +16,8 @@ namespace TheOpenJournal.Controllers
         {
             _postService = postService;
         }
-        [HttpGet("index")]
-        public IActionResult Index()
-        {
-            return Ok();
-        }
-        [HttpPost("add-post")]
+       
+        [HttpPost]
         public async Task<IActionResult> AddPost([FromForm] PostDTO postDto)
         {
             if (ModelState.IsValid)
@@ -45,13 +41,13 @@ namespace TheOpenJournal.Controllers
             }
         }
 
-        [HttpGet("get-posts")]
+        [HttpGet]
         public async Task<IActionResult> GetAllPost()
         {
             var response = await _postService.GetPostsAsync();
-            return Ok( new {data = response });
+            return Ok( new { response });
         }
-        [HttpGet("get-posts-by-id/{categoryId}")]
+        [HttpGet("{categoryId}")]
         public async Task<IActionResult> GetPostByCategory([FromRoute] string categoryId)
         {
             if (Guid.TryParse(categoryId, out Guid categoryGuid))
@@ -65,7 +61,7 @@ namespace TheOpenJournal.Controllers
             }
         }
 
-        [HttpPatch("update-post")]
+        [HttpPatch]
         public async Task<IActionResult> UpdatePost([FromForm]UpdatePostDTO updatePostDto)
         {
             if (ModelState.IsValid)
@@ -82,7 +78,7 @@ namespace TheOpenJournal.Controllers
             }
             return BadRequest(new {message="Invalid Model State"});
         }
-        [HttpGet("get-by-user")]
+        [HttpGet("user")]
         public async Task<IActionResult> GetByUserId()
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
@@ -90,7 +86,7 @@ namespace TheOpenJournal.Controllers
             return Ok(posts);
         }
 
-        [HttpGet("get-by-slug/{slug}")]
+        [HttpGet("{slug}")]
         public async Task<IActionResult> GetBySlug([FromRoute]string slug)
         {
             var post = await _postService.GetPostBySlugAsync(slug);

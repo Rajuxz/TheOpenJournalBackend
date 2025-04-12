@@ -1,13 +1,15 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System.Text;
 using TheOpenJournal.Data;
 using TheOpenJournal.Mapper;
+using TheOpenJournal.Middlewares;
 using TheOpenJournal.Models.Domain;
 using TheOpenJournal.Repository.Implementations;
 using TheOpenJournal.Repository.Interfaces;
@@ -15,7 +17,16 @@ using TheOpenJournal.Services.Implementation;
 using TheOpenJournal.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
+//Serilog Configuration
+var logger = new LoggerConfiguration()
+    .MinimumLevel.Error() 
+    .WriteTo.Console()
+    .WriteTo.File("Logs/OpenJournalLogs.txt",rollingInterval: RollingInterval.Day) //Create a new file in new day and write the logs here.
+    .CreateLogger();
 
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 //Using NpgSql for database connectivity
 string ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -37,6 +48,12 @@ builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
+
+//Disabling auto validation
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 //-----------------------[]-------------------------------------------------------//
 builder.Services.AddAutoMapper(typeof(CategoryMapper));
 
@@ -46,13 +63,14 @@ builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ITagRepository,TagRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-
+builder.Services.AddScoped<ILikeRepository, LikeRepository>();
 // ----------------------[ Add Dependencies for Services Here ] -------------- //
 builder.Services.AddScoped<IAuthServices,AuthServices>();
 builder.Services.AddScoped<IBlogService, BlogService>();
 builder.Services.AddScoped<ICategoryServices, CategoryService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IUtilityService,UtilityService>();
+builder.Services.AddScoped<ILikeService,LikeService>();
 
 //WebHostEnvironment
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -121,6 +139,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigin");

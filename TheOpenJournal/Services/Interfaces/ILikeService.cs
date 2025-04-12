@@ -2,6 +2,6 @@
 {
     public interface ILikeService
     {
-        Task<bool> LikePost(string userId, string postId);
+        Task<bool> LikePostAsync(string userId, Guid postId);
     }
 }
